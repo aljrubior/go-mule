@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-func (serverClient DefaultServerClient) RegisterServer(token, orgId, envId string, body []byte) (*responses.ServerRegistrationResponse, error) {
+func (serverClient DefaultServerClient) RegisterServer(token, agentVersion string, body []byte) (*responses.ServerRegistrationResponse, error) {
 
 	client := &http.Client{Timeout: time.Duration(10) * time.Second}
 
-	req := requests.NewPostRegisterServerRequest(&serverClient.config, token, orgId, envId, body).Build()
+	req := requests.NewPostRegisterServerRequest(&serverClient.config, token, agentVersion, body).Build()
 
 	resp, err := client.Do(req)
 

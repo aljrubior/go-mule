@@ -11,45 +11,45 @@ import (
 func NewPostRegisterServerRequest(
 	config *conf.ServerClientConfig,
 	bearerToken,
-	organizationId,
-	environmentId string,
+	agentVersion  string,
 	body []byte) *PostRegisterServerRequest {
 
 	return &PostRegisterServerRequest{
-		config:         config,
-		bearerToken:    bearerToken,
-		organizationId: organizationId,
-		environmentId:  environmentId,
-		body:           body,
+		config:      config,
+		bearerToken: bearerToken,
+		agentVersion: agentVersion
+		body:        body,
 	}
 }
 
 type PostRegisterServerRequest struct {
 	clients.BaseHttpRequest
-	config         *conf.ServerClientConfig
-	bearerToken    string
-	organizationId string
-	environmentId  string
-	body           []byte
+	config       *conf.ServerClientConfig
+	bearerToken  string
+	agentVersion string
+	body         []byte
 }
 
-func (this *PostRegisterServerRequest) buildUri() string {
+func (request *PostRegisterServerRequest) buildUri() string {
 
-	protocol := this.config.Protocol
-	host := this.config.Host
-	path := this.config.ServersPath
+	protocol := request.config.Protocol
+	host := request.config.Host
+	path := request.config.ServersPath
 
 	return fmt.Sprintf("%s://%s/%s", protocol, host, path)
 }
 
-func (this *PostRegisterServerRequest) Build() *http.Request {
+func (request *PostRegisterServerRequest) Build() *http.Request {
 
-	uri := this.buildUri()
+	uri := request.buildUri()
 
-	req, _ := http.NewRequest(http.MethodPost, uri, bytes.NewBuffer(this.body))
+	req, _ := http.NewRequest(http.MethodPost, uri, bytes.NewBuffer(request.body))
 
-	this.AddDefaultHeaders(req, this.organizationId, this.environmentId, this.bearerToken)
-	this.AddContentType(req, clients.ContentTypeJSON)
+	req.Header.Add("Content-Type", clients.ContentTypeJSON)
+	req.Header.Add("Authorization", request.bearerToken)
+	req.Header.Add("Accept-Language", "en-US,en;q=0.5")
+	req.Header.Add("User-Agent", request.agentVersion)
+	req.Header.Add("Accept", clients.ContentTypeJSON)
 
 	return req
 }
