@@ -1,10 +1,10 @@
 package conf
 
 type CSRConfig struct {
-	commonName,
-	organizationUnit,
-	organization,
-	locality,
-	province,
-	country string
+	CommonName,
+	OrganizationUnit,
+	Organization,
+	Locality,
+	Province,
+	Country string
 }

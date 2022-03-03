@@ -8,4 +8,6 @@ type DefaultConfigManager struct {
 	configDir,
 	configFile string
 	mainConfig conf.MainConfig
+
+	csrConfig *conf.CSRConfig
 }
