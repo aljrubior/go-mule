@@ -1,3 +1,11 @@
+anypoint:
+  protocol:
+  host:
+  port:
+  resources:
+    servers:
+      serversPath:
+
 security:
   certificateSigningRequest:
     commonName:
