@@ -1,6 +1,6 @@
 package conf
 
-type ServerConfigFile struct {
+type ServerClientConfig struct {
 	Protocol    string
 	Host        string
 	Port        string

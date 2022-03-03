@@ -2,10 +2,10 @@ package defaultConfigManager
 
 import "github.com/aljrubior/standalone-runtime/conf"
 
-func (manager *DefaultConfigManager) GetServerConfigFile() *conf.ServerConfigFile {
+func (manager *DefaultConfigManager) GetServerConfigFile() *conf.ServerClientConfig {
 
-	if manager.serverConfigFile == nil {
-		manager.serverConfigFile = &conf.ServerConfigFile{
+	if manager.serverClientConfig == nil {
+		manager.serverClientConfig = &conf.ServerClientConfig{
 			Protocol:    manager.mainConfig.Anypoint.Protocol,
 			Host:        manager.mainConfig.Anypoint.Host,
 			Port:        manager.mainConfig.Anypoint.Port,
@@ -13,5 +13,5 @@ func (manager *DefaultConfigManager) GetServerConfigFile() *conf.ServerConfigFil
 		}
 	}
 
-	return manager.serverConfigFile
+	return manager.serverClientConfig
 }
