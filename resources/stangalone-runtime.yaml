@@ -1,0 +1,8 @@
+security:
+  certificateSigningRequest:
+    commonName:
+    organizationUnit:
+    organization:
+    locality:
+    province:
+    country:
