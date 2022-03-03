@@ -11,14 +11,14 @@ import (
 func NewPostRegisterServerRequest(
 	config *conf.ServerClientConfig,
 	bearerToken,
-	agentVersion  string,
+	agentVersion string,
 	body []byte) *PostRegisterServerRequest {
 
 	return &PostRegisterServerRequest{
-		config:      config,
-		bearerToken: bearerToken,
-		agentVersion: agentVersion
-		body:        body,
+		config:       config,
+		bearerToken:  bearerToken,
+		agentVersion: agentVersion,
+		body:         body,
 	}
 }
 

@@ -1,8 +1,10 @@
 package services
 
 import (
+	"encoding/json"
 	"github.com/aljrubior/standalone-runtime/clients/serverClient"
 	"github.com/aljrubior/standalone-runtime/clients/serverClient/responses"
+	"github.com/aljrubior/standalone-runtime/managers/serverManager/requests"
 )
 
 func NewDefaultServerService(serverClient serverClient.ServerClient) DefaultServerService {
@@ -15,7 +17,13 @@ type DefaultServerService struct {
 	serverClient serverClient.ServerClient
 }
 
-func (serverService DefaultServerService) RegisterServer(token, agentVersion string, body []byte) (*responses.ServerRegistrationResponse, error) {
+func (serverService DefaultServerService) RegisterServer(token, agentVersion string, request requests.ServerRegistrationRequest) (*responses.ServerRegistrationResponse, error) {
 
-	return serverService.serverClient.RegisterServer(token, agentVersion, body)
+	data, err := json.Marshal(request)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return serverService.serverClient.RegisterServer(token, agentVersion, data)
 }
