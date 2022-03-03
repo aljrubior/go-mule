@@ -9,5 +9,6 @@ type DefaultConfigManager struct {
 	configFile string
 	mainConfig conf.MainConfig
 
-	csrConfig *conf.CSRConfig
+	csrConfig        *conf.CSRConfig
+	serverConfigFile *conf.ServerConfigFile
 }
