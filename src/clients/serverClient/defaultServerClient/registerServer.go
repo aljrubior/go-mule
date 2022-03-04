@@ -23,7 +23,7 @@ func (serverClient DefaultServerClient) RegisterServer(token, agentVersion strin
 		return nil, err
 	}
 
-	if resp.StatusCode != 202 {
+	if resp.StatusCode != 200 {
 		return nil, serverClient.ThrowError(resp)
 	}
 

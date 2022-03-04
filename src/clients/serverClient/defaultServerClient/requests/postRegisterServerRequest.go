@@ -46,7 +46,7 @@ func (request *PostRegisterServerRequest) Build() *http.Request {
 	req, _ := http.NewRequest(http.MethodPost, uri, bytes.NewBuffer(request.body))
 
 	req.Header.Add("Content-Type", clients.ContentTypeJSON)
-	req.Header.Add("Authorization", request.bearerToken)
+	req.Header.Add("Authorization", request.GetBearerTokenValue(request.bearerToken))
 	req.Header.Add("Accept-Language", "en-US,en;q=0.5")
 	req.Header.Add("User-Agent", request.agentVersion)
 	req.Header.Add("Accept", clients.ContentTypeJSON)

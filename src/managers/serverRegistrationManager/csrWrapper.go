@@ -18,5 +18,5 @@ func (wrapper CSRWrapper) ToString() string {
 
 	csrAsArray := strings.Split(csrAsString, "\n")
 
-	return strings.Join(csrAsArray, "\\n")
+	return strings.Join(csrAsArray, "\n")
 }

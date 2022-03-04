@@ -12,10 +12,10 @@ func NewServerRegistrationRequest(muleVersion, gatewayVersion, muleLabel, csr, a
 }
 
 type ServerRegistrationRequest struct {
-	MuleVersion    string
-	GatewayVersion string
-	MuleLabel      string
-	CSR            string
-	AgentVersion   string
-	Environment    string
+	MuleVersion    string `json:"muleVersion"`
+	GatewayVersion string `json:"gatewayVersion"`
+	MuleLabel      string `json:"muleLabel"`
+	CSR            string `json:"signatureRequest"`
+	AgentVersion   string `json:"agentVersion"`
+	Environment    string `json:"environment"`
 }
