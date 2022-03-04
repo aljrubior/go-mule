@@ -8,7 +8,7 @@ type PostHandShakeNotification struct {
 	message string
 }
 
-func (this PostHandShakeNotification) CreateNotification() string {
+func (notification PostHandShakeNotification) CreateNotification() string {
 	return `POST handshake HTTP/1.1
 Content-Type: application/json
 Message-Id: 382b99bf-640c-4e7e-b1f4-00a8e9da1b3c

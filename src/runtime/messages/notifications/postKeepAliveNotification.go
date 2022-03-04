@@ -7,10 +7,10 @@ func NewPostKeepAliveNotification() *PostKeepAliveNotification {
 type PostKeepAliveNotification struct {
 }
 
-func (this PostKeepAliveNotification) CreateNotification() string {
-	return this.GetTemplate()
+func (notification PostKeepAliveNotification) CreateNotification() string {
+	return notification.GetTemplate()
 }
 
-func (this PostKeepAliveNotification) GetTemplate() string {
+func (notification PostKeepAliveNotification) GetTemplate() string {
 	return `POST keepAlive HTTP/1.1`
 }

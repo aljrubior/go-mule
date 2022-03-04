@@ -15,16 +15,16 @@ type PutStartupNotification struct {
 	Notification
 }
 
-func (this PutStartupNotification) CreateNotification() string {
-	message := this.GetTemplate()
+func (notification PutStartupNotification) CreateNotification() string {
+	message := notification.GetTemplate()
 
-	message = strings.Replace(message, SERVER_ID_PATTERN, this.ServerId, 1)
-	message = strings.Replace(message, CONTEXT_ID_PATTERN, this.ContextId, 1)
+	message = strings.Replace(message, SERVER_ID_PATTERN, notification.ServerId, 1)
+	message = strings.Replace(message, CONTEXT_ID_PATTERN, notification.ContextId, 1)
 
 	return message
 }
 
-func (this PutStartupNotification) GetTemplate() string {
+func (notification PutStartupNotification) GetTemplate() string {
 	return `POST startup HTTP/1.1
 Content-Type: application/json
 X-ANYPNT-SERVER-ID: {{serverId}}
