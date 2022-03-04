@@ -1,6 +1,9 @@
 package security
 
-import "crypto/x509"
+import (
+	"crypto/x509"
+	"encoding/pem"
+)
 
 func NewCertificateWrapper(data []byte) CertificateWrapper {
 	return CertificateWrapper{
@@ -14,7 +17,9 @@ type CertificateWrapper struct {
 
 func (wrapper CertificateWrapper) GetCommonName() (string, error) {
 
-	cert, err := x509.ParseCertificate(wrapper.data)
+	block, _ := pem.Decode(wrapper.data)
+
+	cert, err := x509.ParseCertificate(block.Bytes)
 
 	if err != nil {
 		return "", err

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/aljrubior/standalone-runtime/handlers"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -12,6 +13,8 @@ var createCmd = &cobra.Command{
 	Short: "Create",
 	Run: func(cmd *cobra.Command, args []string) {
 
+		serverHandler := handlers.NewDefaultServerHandler(ServerRegistrationManager)
+
 		switch len(args) {
 		case 1:
 			serverName := args[0]
@@ -19,13 +22,14 @@ var createCmd = &cobra.Command{
 			agentVersion := "2.4.27"
 			environment := "qax"
 
-			_, err := ServerRegistrationManager.Register(*hybridToken, serverName, muleVersion, agentVersion, environment)
+			err := serverHandler.CreateServer(*hybridToken, serverName, muleVersion, agentVersion, environment)
 
 			if err != nil {
+				println("Error!")
 				log.Fatalln(err.Error())
 				return
 			}
-			println("Standalone created")
+
 			return
 		}
 	},

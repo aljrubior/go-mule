@@ -15,7 +15,7 @@ type SignedCertificateWrapper struct {
 
 func (wrapper SignedCertificateWrapper) Parse() string {
 
-	cert := strings.Replace(wrapper.certificate, "REQUEST", "", 1)
+	cert := strings.Replace(wrapper.certificate, " REQUEST", "", 2)
 
 	certAsArray := strings.Split(cert, "\\n")
 
