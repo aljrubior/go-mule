@@ -2,7 +2,7 @@ package defaultConfigManager
 
 import "github.com/aljrubior/standalone-runtime/conf"
 
-func (manager *DefaultConfigManager) GetServerConfigFile() *conf.ServerClientConfig {
+func (manager *DefaultConfigManager) GetServerClientConfig() *conf.ServerClientConfig {
 
 	if manager.serverClientConfig == nil {
 		manager.serverClientConfig = &conf.ServerClientConfig{

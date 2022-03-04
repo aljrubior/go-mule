@@ -10,14 +10,22 @@ import (
 	"github.com/aljrubior/standalone-runtime/clients/serverClient/defaultServerClient"
 	"github.com/aljrubior/standalone-runtime/conf"
 	"github.com/aljrubior/standalone-runtime/managers/serverManager"
+	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
 	"github.com/aljrubior/standalone-runtime/services"
 )
 
 // Injectors from serverManagerWire.go:
 
-func InitializeAccountManager(config conf.ServerClientConfig) serverManager.ServerManager {
+func InitializeServerManager(config conf.ServerClientConfig) serverManager.ServerManager {
 	defaultServerClientDefaultServerClient := defaultServerClient.NewDefaultServerClient(config)
 	defaultServerService := services.NewDefaultServerService(defaultServerClientDefaultServerClient)
 	defaultServerManager := serverManager.NewDefaultServerManager(defaultServerService)
 	return defaultServerManager
+}
+
+// Injectors from serverRegistrationManager.go:
+
+func InitializeServerRegistrationManager(csrConfig conf.CSRConfig, serverManager2 serverManager.ServerManager) serverRegistrationManager.ServerRegistrationManager {
+	defaultServerRegistrationManager := serverRegistrationManager.NewDefaultServerRegistrationManager(serverManager2, csrConfig)
+	return defaultServerRegistrationManager
 }

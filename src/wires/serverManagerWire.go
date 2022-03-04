@@ -12,7 +12,7 @@ import (
 	"github.com/google/wire"
 )
 
-func InitializeAccountManager(config conf.ServerClientConfig) serverManager.ServerManager {
+func InitializeServerManager(config conf.ServerClientConfig) serverManager.ServerManager {
 
 	wire.Build(
 		defaultServerClient.NewDefaultServerClient,
