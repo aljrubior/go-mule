@@ -49,9 +49,12 @@ func (registrationManager DefaultServerRegistrationManager) Register(token, serv
 
 	cert := NewSignedCertificateWrapper(response.Certificate).Parse()
 
+	caCert := NewSignedCertificateWrapper(response.CACertificate).Parse()
+
 	return entities.NewServerEntity(
 		privateKey,
 		[]byte(cert),
+		[]byte(caCert),
 		response.EnvironmentUrls.MCMWebsocketUrl,
 		response.EnvironmentUrls.MCMWebsocketUrl), nil
 }

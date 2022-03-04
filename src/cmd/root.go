@@ -5,12 +5,14 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"github.com/aljrubior/standalone-runtime/managers/configManager/defaultConfigManager"
+	"github.com/aljrubior/standalone-runtime/managers/serverManager"
+	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
+	"github.com/aljrubior/standalone-runtime/wires"
 	"os"
 
 	"github.com/spf13/cobra"
 )
-
-
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -36,6 +38,9 @@ func Execute() {
 	}
 }
 
+var ServerManager serverManager.ServerManager
+var ServerRegistrationManager serverRegistrationManager.ServerRegistrationManager
+
 func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
@@ -46,6 +51,11 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	configManger := defaultConfigManager.NewDefaultConfigManager()
+	csrConfig := configManger.GetCSRConfig()
+	serverClientConfig := configManger.GetServerClientConfig()
+
+	ServerManager = wires.InitializeServerManager(*serverClientConfig)
+	ServerRegistrationManager = wires.InitializeServerRegistrationManager(*csrConfig, ServerManager)
 }
-
-

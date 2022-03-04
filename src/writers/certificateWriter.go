@@ -6,16 +6,18 @@ import (
 	"os"
 )
 
-func NewCertificateWriter(privateKey, certificate []byte) CertificateWriter {
+func NewCertificateWriter(privateKey, certificate, caCertificate []byte) CertificateWriter {
 	return CertificateWriter{
-		privateKey:  privateKey,
-		certificate: certificate,
+		privateKey:    privateKey,
+		certificate:   certificate,
+		caCertificate: caCertificate,
 	}
 }
 
 type CertificateWriter struct {
 	privateKey,
-	certificate []byte
+	certificate,
+	caCertificate []byte
 }
 
 func (writer CertificateWriter) WriteFile() error {
@@ -35,6 +37,7 @@ func (writer CertificateWriter) WriteFile() error {
 
 	pemFileName := fmt.Sprintf("%s/%s.pem", workspaceDir, commonName)
 	keyFileName := fmt.Sprintf("%s/%s.key", workspaceDir, commonName)
+	caFileName := fmt.Sprintf("%s/ca.pem", workspaceDir)
 
 	pemFile, err := os.Create(pemFileName)
 
@@ -43,6 +46,12 @@ func (writer CertificateWriter) WriteFile() error {
 	}
 
 	keyFile, err := os.Create(keyFileName)
+
+	if err != nil {
+		return err
+	}
+
+	caFile, err := os.Create(caFileName)
 
 	if err != nil {
 		return err
@@ -60,7 +69,13 @@ func (writer CertificateWriter) WriteFile() error {
 		return err
 	}
 
-	println(fmt.Sprintf("Standalone created successfully [Id: '%s' Certificate: '%s' Private Key: '%s']", commonName, pemFileName, keyFileName))
+	_, err = caFile.Write(writer.caCertificate)
+
+	if err != nil {
+		return err
+	}
+
+	println(fmt.Sprintf("Standalone created successfully [Id: '%s' Certificate: '%s' Private Key: '%s' CA Certificate: '%s']", commonName, pemFileName, keyFileName, caFileName))
 
 	return nil
 }

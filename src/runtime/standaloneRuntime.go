@@ -18,23 +18,23 @@ func NewStandaloneRuntime(
 	contextId,
 	certificatePath,
 	privateKeyPath,
-	caCertificate string) StandaloneRuntime {
+	caCertificatePath string) StandaloneRuntime {
 
 	return StandaloneRuntime{
-		serverId:        serverId,
-		contextId:       contextId,
-		certificatePath: certificatePath,
-		privateKeyPath:  privateKeyPath,
-		caCertificate:   caCertificate,
+		serverId:          serverId,
+		contextId:         contextId,
+		certificatePath:   certificatePath,
+		privateKeyPath:    privateKeyPath,
+		caCertificatePath: caCertificatePath,
 	}
 }
 
 type StandaloneRuntime struct {
-	serverId        string
-	contextId       string
-	certificatePath string
-	privateKeyPath  string
-	caCertificate   string
+	serverId          string
+	contextId         string
+	certificatePath   string
+	privateKeyPath    string
+	caCertificatePath string
 }
 
 func (runtime StandaloneRuntime) Start() {
@@ -82,7 +82,7 @@ func (runtime StandaloneRuntime) createWebsockerConnection() *websocket.Conn {
 
 	url := runtime.CreateURL()
 
-	tlsConfig := tls.NewTLSConfigBuilder(runtime.certificatePath, runtime.privateKeyPath, runtime.caCertificate).Build()
+	tlsConfig := tls.NewTLSConfigBuilder(runtime.certificatePath, runtime.privateKeyPath, runtime.caCertificatePath).Build()
 
 	conn, _, err := websockets.NewRuntimeManagerDialer(url, tlsConfig).CreateDialer()
 

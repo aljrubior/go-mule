@@ -31,13 +31,11 @@ func (builder TLSConfigBuilder) Build() *tls.Config {
 	cert.Certificate = append(cert.Certificate, builder.LoadPublicCertificate().Bytes)
 	cert.PrivateKey = builder.LoadPrivateKey()
 
-	rootCAs := builder.BuildCertPool(builder.LoadCACertificate())
-
 	return &tls.Config{
-		MinVersion:   tls.VersionTLS12,
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		Certificates: []tls.Certificate{cert},
-		RootCAs:      rootCAs,
+		InsecureSkipVerify: true,
+		MinVersion:         tls.VersionTLS12,
+		ClientAuth:         tls.RequireAndVerifyClientCert,
+		Certificates:       []tls.Certificate{cert},
 		CipherSuites: []uint16{
 			tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
 			tls.TLS_RSA_WITH_AES_256_CBC_SHA,
@@ -69,10 +67,11 @@ func (builder TLSConfigBuilder) LoadPrivateKey() interface{} {
 
 	block, _ := pem.Decode(data)
 
-	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 
 	if err != nil {
 		fmt.Println("Error: ParsePKCS8PrivateKey")
+		println(err.Error())
 		os.Exit(1)
 	}
 
