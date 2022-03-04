@@ -5,7 +5,7 @@ import (
 	"crypto/rsa"
 )
 
-func (generator RSAKeyPairGenerator) GenerateKeyPair() ([]byte, []byte, error) {
+func (generator RSAKeyPairGenerator) GenerateKeyCsr() ([]byte, []byte, error) {
 
 	key, err := rsa.GenerateKey(rand.Reader, generator.bits)
 
