@@ -1,6 +1,8 @@
 package runtime
 
 import (
+	"fmt"
+	"github.com/aljrubior/standalone-runtime/application"
 	"github.com/aljrubior/standalone-runtime/runtime/messages"
 	"github.com/aljrubior/standalone-runtime/runtime/messages/notifications"
 	"github.com/aljrubior/standalone-runtime/runtime/messages/responses"
@@ -39,13 +41,17 @@ type StandaloneRuntime struct {
 
 func (runtime StandaloneRuntime) Start() {
 
-	conn := runtime.createWebsockerConnection()
+	conn := runtime.createWebsocketConnection()
 
 	defer conn.Close()
 
 	go runtime.startMessageListener(conn)
 
 	runtime.initiateAnypointHandShake(conn)
+
+	runtime.sendDomainContextInitialisedNotifications(conn)
+
+	runtime.sendDomainDeployedNotifications(conn)
 
 	runtime.sendStartupNotifications(conn)
 
@@ -57,8 +63,18 @@ func (runtime StandaloneRuntime) initiateAnypointHandShake(conn *websocket.Conn)
 	runtime.SendNotification(conn, notification)
 }
 
+func (runtime StandaloneRuntime) sendDomainContextInitialisedNotifications(conn *websocket.Conn) {
+	notification := notifications.NewPutDomainDeploymentContextInitialisedNotification(runtime.serverId, runtime.contextId).CreateNotification()
+	runtime.SendNotification(conn, notification)
+}
+
+func (runtime StandaloneRuntime) sendDomainDeployedNotifications(conn *websocket.Conn) {
+	notification := notifications.NewPutDomainDeploymentDeployedNotification(runtime.serverId, runtime.contextId).CreateNotification()
+	runtime.SendNotification(conn, notification)
+}
+
 func (runtime StandaloneRuntime) sendStartupNotifications(conn *websocket.Conn) {
-	notification := notifications.NewPostHandShakeNotification().CreateNotification()
+	notification := notifications.NewPutStartupNotification(runtime.serverId, runtime.contextId).CreateNotification()
 	runtime.SendNotification(conn, notification)
 }
 
@@ -68,17 +84,22 @@ func (runtime StandaloneRuntime) startKeepAliveNotifications(conn *websocket.Con
 	for {
 		runtime.SendNotification(conn, notification)
 
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }
 
 func (runtime StandaloneRuntime) SendNotification(conn *websocket.Conn, notification string) {
+
+	println(notification)
+
 	if err := conn.WriteMessage(websocket.BinaryMessage, []byte(notification)); err != nil {
 		log.Fatal(err)
 	}
+
+	time.Sleep(1 * time.Second)
 }
 
-func (runtime StandaloneRuntime) createWebsockerConnection() *websocket.Conn {
+func (runtime StandaloneRuntime) createWebsocketConnection() *websocket.Conn {
 
 	url := runtime.CreateURL()
 
@@ -113,46 +134,69 @@ func (runtime StandaloneRuntime) startMessageListener(conn *websocket.Conn) {
 		}
 
 		websocketMessage := messages.NewWebsocketMessage(string(message))
-		println(websocketMessage.GetMessage())
 
-		switch websocketMessage.GetResquestHeader() {
-		case messages.GET_CLUSTERS_REQUEST_HEADER:
+		if websocketMessage.IsResponse() {
+			println(fmt.Sprintf("\n%s", websocketMessage.GetMessage()))
+			continue
+		}
+
+		println(websocketMessage.GetResquestHeader())
+
+		switch websocketMessage.GetRequestAction() {
+		case messages.GET_CLUSTERS_REQUEST_ACTION:
+
+			println(fmt.Sprintf("\n%s", websocketMessage.GetMessage()))
+
 			message := responses.NewGetClustersResponse(websocketMessage.GetMessageId()).CreateResponse()
+
 			println(message)
+
 			if err := conn.WriteMessage(websocket.BinaryMessage, []byte(message)); err != nil {
-				println("createGetClustersResponse")
 				log.Fatal(err)
 			}
-		case messages.GET_AGENT_CONFIGURATION_REQUEST_HEADER:
-			responses.NewAgentConfigurationResponse(websocketMessage.GetMessageId()).CreateResponse()
+		case messages.GET_AGENT_CONFIGURATION_REQUEST_ACTION:
+
+			println(fmt.Sprintf("\n%s", websocketMessage.GetMessage()))
+
+			message := responses.NewAgentConfigurationResponse(websocketMessage.GetMessageId()).CreateResponse()
+
+			println(message)
+
 			if err := conn.WriteMessage(websocket.BinaryMessage, []byte(message)); err != nil {
-				println("createAgentConfigurationResponse")
 				log.Fatal(err)
 			}
-		}
+		case messages.PUT_APPLICATIONS_REQUEST_ACTION:
+			applicationName := websocketMessage.GetApplicationName()
 
-		notification := notifications.NewPutDomainDeploymentContextInitialisedNotification(runtime.serverId, runtime.contextId).CreateNotification()
+			totalFixedScheduler := 50
+			totalCronScheduler := 50
 
-		if err := conn.WriteMessage(websocket.BinaryMessage, []byte(notification)); err != nil {
-			println("createPutDomainDeploymentContextInitialisedMessage")
-			log.Fatal(err)
-		}
+			application := application.NewApplicationBuilder(applicationName, totalFixedScheduler, totalCronScheduler).Build()
 
-		time.Sleep(1 * time.Second)
+			message := notifications.NewPutDeploymentStartedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
+			runtime.SendNotification(conn, message)
 
-		notification = notifications.NewPutDomainDeploymentDeployedNotification(runtime.serverId, runtime.contextId).CreateNotification()
-		if err := conn.WriteMessage(websocket.BinaryMessage, []byte(notification)); err != nil {
-			println("createPutDomainDeploymentDeployedMessage")
-			log.Fatal(err)
-		}
+			message = notifications.NewPutDeploymentContextCreatedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
+			runtime.SendNotification(conn, message)
 
-		time.Sleep(1 * time.Second)
+			message = notifications.NewPutDeploymentContextInitialisedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
+			runtime.SendNotification(conn, message)
 
-		notification = notifications.NewPutStartupNotification(runtime.serverId, runtime.contextId).CreateNotification()
+			time.Sleep(1 * time.Second)
 
-		if err := conn.WriteMessage(websocket.BinaryMessage, []byte(notification)); err != nil {
-			println("createPutStartupMessage")
-			log.Fatal(err)
+			messages := notifications.NewPutDeploymentFlowNotification(runtime.serverId, runtime.contextId, application).CreateNotifications()
+			for _, v := range messages {
+				runtime.SendNotification(conn, v)
+			}
+
+			message = notifications.NewPutDeploymentContextStartedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
+			runtime.SendNotification(conn, message)
+
+			message = notifications.NewPutDeploymentSchedulersNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
+			runtime.SendNotification(conn, message)
+
+			message = notifications.NewPutDeploymentDeployedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
+			runtime.SendNotification(conn, message)
 		}
 	}
 }
