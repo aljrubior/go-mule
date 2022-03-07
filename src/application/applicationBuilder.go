@@ -57,7 +57,7 @@ func (builder ApplicationBuilder) buildFixedSchedulers() []FixedScheduler {
 	var schedulers []FixedScheduler
 
 	for i := 0; i < builder.totalFixedSchedulers; i++ {
-		flowName := fmt.Sprintf("fixedScheduler%v", i)
+		flowName := fmt.Sprintf("fixed-%v", i)
 		schedulers = append(schedulers, FixedScheduler{
 			Name:       fmt.Sprintf("polling://%s/", flowName),
 			FlowName:   flowName,
@@ -76,7 +76,7 @@ func (builder ApplicationBuilder) buildCronSchedulers() []CronScheduler {
 	var schedulers []CronScheduler
 
 	for i := 0; i < builder.totalCronSchedulers; i++ {
-		flowName := fmt.Sprintf("cronScheduler%v", i)
+		flowName := fmt.Sprintf("cron-%v", i)
 		schedulers = append(schedulers, CronScheduler{
 			Name:       fmt.Sprintf("polling://%s/", flowName),
 			FlowName:   flowName,

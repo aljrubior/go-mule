@@ -1,16 +1,7 @@
 package messages
 
-import "strings"
-
-const (
-	MESSAGE_ID_HEADER                          = "Message-Id"
-	GET_CLUSTERS_REQUEST_ACTION                = "GET clusters"
-	GET_AGENT_CONFIGURATION_REQUEST_ACTION     = "GET agent/configuration"
-	PUT_APPLICATIONS_REQUEST_ACTION            = "PUT applications/"
-	PATCH_LOGGING_SERVICE_REQUEST_ACTION       = "PATCH agent/mule.agent.logging.service"
-	PUT_LOGGING_SERVICE_ENABLE_REQUEST_ACTION  = "PUT agent/mule.agent.logging.service/enable"
-	PUT_TRACKING_SERVICE_REQUEST_ACTION        = "PUT agent/mule.agent.tracking.service"
-	PUT_TRACKING_SERVICE_ENABLE_REQUEST_ACTION = "PUT agent/mule.agent.tracking.service/enable"
+import (
+	"strings"
 )
 
 func NewWebsocketMessage(message string) *WebsocketMessage {
@@ -42,7 +33,7 @@ func (this WebsocketMessage) IsRequest() bool {
 
 func (this WebsocketMessage) IsDeployApplicationRequest() bool {
 
-	return strings.HasPrefix(this.message, "PUT applications/")
+	return strings.HasPrefix(this.GetResquestHeader(), "PUT applications/")
 }
 
 func (this WebsocketMessage) GetApplicationName() string {

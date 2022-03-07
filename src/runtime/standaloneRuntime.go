@@ -5,7 +5,7 @@ import (
 	"github.com/aljrubior/standalone-runtime/application"
 	"github.com/aljrubior/standalone-runtime/runtime/messages"
 	"github.com/aljrubior/standalone-runtime/runtime/messages/notifications"
-	"github.com/aljrubior/standalone-runtime/runtime/messages/responses"
+	"github.com/aljrubior/standalone-runtime/runtime/strategies"
 	"github.com/aljrubior/standalone-runtime/tls"
 	"github.com/aljrubior/standalone-runtime/websockets"
 	"github.com/gorilla/websocket"
@@ -22,12 +22,15 @@ func NewStandaloneRuntime(
 	privateKeyPath,
 	caCertificatePath string) StandaloneRuntime {
 
+	applications := make(map[string]*application.Application)
+
 	return StandaloneRuntime{
 		serverId:          serverId,
 		contextId:         contextId,
 		certificatePath:   certificatePath,
 		privateKeyPath:    privateKeyPath,
 		caCertificatePath: caCertificatePath,
+		applications:      applications,
 	}
 }
 
@@ -37,6 +40,8 @@ type StandaloneRuntime struct {
 	certificatePath   string
 	privateKeyPath    string
 	caCertificatePath string
+
+	applications map[string]*application.Application
 }
 
 func (runtime StandaloneRuntime) Start() {
@@ -123,7 +128,9 @@ func (runtime StandaloneRuntime) CreateURL() url.URL {
 	}
 }
 
-func (runtime StandaloneRuntime) startMessageListener(conn *websocket.Conn) {
+func (t StandaloneRuntime) startMessageListener(conn *websocket.Conn) {
+
+	regex := messages.NewActionRequestRegex()
 
 	for {
 		_, message, err := conn.ReadMessage()
@@ -142,61 +149,14 @@ func (runtime StandaloneRuntime) startMessageListener(conn *websocket.Conn) {
 
 		println(websocketMessage.GetResquestHeader())
 
-		switch websocketMessage.GetRequestAction() {
-		case messages.GET_CLUSTERS_REQUEST_ACTION:
-
-			println(fmt.Sprintf("\n%s", websocketMessage.GetMessage()))
-
-			message := responses.NewGetClustersResponse(websocketMessage.GetMessageId()).CreateResponse()
-
-			println(message)
-
-			if err := conn.WriteMessage(websocket.BinaryMessage, []byte(message)); err != nil {
-				log.Fatal(err)
-			}
-		case messages.GET_AGENT_CONFIGURATION_REQUEST_ACTION:
-
-			println(fmt.Sprintf("\n%s", websocketMessage.GetMessage()))
-
-			message := responses.NewAgentConfigurationResponse(websocketMessage.GetMessageId()).CreateResponse()
-
-			println(message)
-
-			if err := conn.WriteMessage(websocket.BinaryMessage, []byte(message)); err != nil {
-				log.Fatal(err)
-			}
-		case messages.PUT_APPLICATIONS_REQUEST_ACTION:
+		if regex.PutApplication.MatchString(websocketMessage.GetResquestHeader()) {
 			applicationName := websocketMessage.GetApplicationName()
-
-			totalFixedScheduler := 50
-			totalCronScheduler := 50
-
-			application := application.NewApplicationBuilder(applicationName, totalFixedScheduler, totalCronScheduler).Build()
-
-			message := notifications.NewPutDeploymentStartedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
-			runtime.SendNotification(conn, message)
-
-			message = notifications.NewPutDeploymentContextCreatedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
-			runtime.SendNotification(conn, message)
-
-			message = notifications.NewPutDeploymentContextInitialisedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
-			runtime.SendNotification(conn, message)
-
-			time.Sleep(1 * time.Second)
-
-			messages := notifications.NewPutDeploymentFlowNotification(runtime.serverId, runtime.contextId, application).CreateNotifications()
-			for _, v := range messages {
-				runtime.SendNotification(conn, v)
-			}
-
-			message = notifications.NewPutDeploymentContextStartedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
-			runtime.SendNotification(conn, message)
-
-			message = notifications.NewPutDeploymentSchedulersNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
-			runtime.SendNotification(conn, message)
-
-			message = notifications.NewPutDeploymentDeployedNotification(runtime.serverId, runtime.contextId, application).CreateNotification()
-			runtime.SendNotification(conn, message)
+			totalFixedSchedulers := 5
+			totalCronSchedulers := 5
+			t.applications[applicationName] = application.NewApplicationBuilder(applicationName, totalFixedSchedulers, totalCronSchedulers).Build()
 		}
+
+		strategies.NewActionStrategyBuilder(conn, websocketMessage, t.serverId, t.contextId, &t.applications, &regex).Build().Execute()
+
 	}
 }
