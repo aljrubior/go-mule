@@ -1,4 +1,4 @@
-# View your current Anypoint environment
+# Register a standalone-runtime
 
 ### 1. Register a standalone-runtime
 
@@ -15,16 +15,16 @@ Standalone created successfully [Id: '1003071' Certificate: './1003071/1003071.p
 ### 2. Inspect your current directory
 
 ```
-ls -la
+ls -ld
 ```
 
 Expected output:
 
 ```
-1003071
+drwxr-xr-x  5 foobar  staff  160 Mar  7 09:11 1003071
 ```
 
-### 3. Inspect the folder
+### 3. Inspect the runtime directory
 
 ```
 cd 1003071
