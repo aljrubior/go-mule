@@ -6,7 +6,7 @@ import (
 	"github.com/aljrubior/standalone-runtime/runtime/messages"
 	"github.com/aljrubior/standalone-runtime/runtime/messages/notifications"
 	"github.com/aljrubior/standalone-runtime/runtime/strategies"
-	"github.com/aljrubior/standalone-runtime/tls"
+	"github.com/aljrubior/standalone-runtime/security"
 	"github.com/aljrubior/standalone-runtime/websockets"
 	"github.com/gorilla/websocket"
 	"io"
@@ -20,7 +20,9 @@ func NewStandaloneRuntime(
 	contextId,
 	certificatePath,
 	privateKeyPath,
-	caCertificatePath string) StandaloneRuntime {
+	caCertificatePath string,
+	totalFixedSchPerApp,
+	totalCronSchPerApp int) StandaloneRuntime {
 
 	applications := make(map[string]*application.Application)
 
@@ -30,7 +32,11 @@ func NewStandaloneRuntime(
 		certificatePath:   certificatePath,
 		privateKeyPath:    privateKeyPath,
 		caCertificatePath: caCertificatePath,
-		applications:      applications,
+
+		totalFixedSchPerApp: totalFixedSchPerApp,
+		totalCronSchPerApp:  totalCronSchPerApp,
+
+		applications: applications,
 	}
 }
 
@@ -40,6 +46,9 @@ type StandaloneRuntime struct {
 	certificatePath   string
 	privateKeyPath    string
 	caCertificatePath string
+
+	totalFixedSchPerApp,
+	totalCronSchPerApp int
 
 	applications map[string]*application.Application
 }
@@ -108,7 +117,7 @@ func (runtime StandaloneRuntime) createWebsocketConnection() *websocket.Conn {
 
 	url := runtime.CreateURL()
 
-	tlsConfig := tls.NewTLSConfigBuilder(runtime.certificatePath, runtime.privateKeyPath, runtime.caCertificatePath).Build()
+	tlsConfig := security.NewTLSConfigBuilder(runtime.certificatePath, runtime.privateKeyPath, runtime.caCertificatePath).Build()
 
 	conn, _, err := websockets.NewRuntimeManagerDialer(url, tlsConfig).CreateDialer()
 
@@ -151,9 +160,7 @@ func (t StandaloneRuntime) startMessageListener(conn *websocket.Conn) {
 
 		if regex.PutApplication.MatchString(websocketMessage.GetResquestHeader()) {
 			applicationName := websocketMessage.GetApplicationName()
-			totalFixedSchedulers := 5
-			totalCronSchedulers := 5
-			t.applications[applicationName] = application.NewApplicationBuilder(applicationName, totalFixedSchedulers, totalCronSchedulers).Build()
+			t.applications[applicationName] = application.NewApplicationBuilder(applicationName, t.totalFixedSchPerApp, t.totalCronSchPerApp).Build()
 		}
 
 		strategies.NewActionStrategyBuilder(conn, websocketMessage, t.serverId, t.contextId, &t.applications, &regex).Build().Execute()

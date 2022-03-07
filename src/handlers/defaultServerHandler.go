@@ -9,6 +9,10 @@ import (
 	"io/ioutil"
 )
 
+const (
+	TOTAL_FLOWS_PER_APPLICATION_DEFAULT = 10
+)
+
 func NewDefaultServerHandler(serverRegistrationManager serverRegistrationManager.ServerRegistrationManager) DefaultServerHandler {
 	return DefaultServerHandler{
 		serverRegistrationManager: serverRegistrationManager,
@@ -19,9 +23,9 @@ type DefaultServerHandler struct {
 	serverRegistrationManager serverRegistrationManager.ServerRegistrationManager
 }
 
-func (handler DefaultServerHandler) CreateServer(token, serverName, muleVersion, agentVersion, environment string) error {
+func (t DefaultServerHandler) CreateServer(token, serverName, muleVersion, agentVersion, environment string) error {
 
-	entity, err := handler.serverRegistrationManager.Register(token, serverName, muleVersion, agentVersion, environment)
+	entity, err := t.serverRegistrationManager.Register(token, serverName, muleVersion, agentVersion, environment)
 
 	if err != nil {
 		return err
@@ -32,7 +36,13 @@ func (handler DefaultServerHandler) CreateServer(token, serverName, muleVersion,
 	return nil
 }
 
-func (handler DefaultServerHandler) StartServer(serverId string) error {
+func (t DefaultServerHandler) StartServer(serverId string, totalFlowsPerApp int) error {
+
+	totalFlows := t.getTotalFlows(totalFlowsPerApp)
+	totalFixedSchPerApp, totalCronSchPerApp := t.getSchedulerCountPerApplication(totalFlows)
+
+	println(fmt.Sprintf("Runtime Configuration - Flows Per Application [total: '%v']", totalFlows))
+	println(fmt.Sprintf("Runtime Configuration - Schedulers Per Application [fixedFrequency: '%v' cron: '%v']\n", totalFixedSchPerApp, totalCronSchPerApp))
 
 	privateKeyPath := fmt.Sprintf("./%s/%s.key", serverId, serverId)
 	certificatePath := fmt.Sprintf("./%s/%s.pem", serverId, serverId)
@@ -50,9 +60,26 @@ func (handler DefaultServerHandler) StartServer(serverId string) error {
 		return err
 	}
 
-	runtime := runtime.NewStandaloneRuntime(serverId, contextId, certificatePath, privateKeyPath, caCertificatePath)
+	runtime := runtime.NewStandaloneRuntime(serverId, contextId, certificatePath, privateKeyPath, caCertificatePath, totalFixedSchPerApp, totalCronSchPerApp)
 
 	runtime.Start()
 
 	return nil
+}
+
+func (t DefaultServerHandler) getTotalFlows(count int) int {
+
+	if count > 0 {
+		return count
+	}
+
+	return TOTAL_FLOWS_PER_APPLICATION_DEFAULT
+}
+
+func (t DefaultServerHandler) getSchedulerCountPerApplication(totalFlowsPerApplication int) (int, int) {
+
+	totalFixedSchedulers := totalFlowsPerApplication / 2
+	totalCronSchedulers := totalFlowsPerApplication - totalFixedSchedulers
+
+	return totalFixedSchedulers, totalCronSchedulers
 }

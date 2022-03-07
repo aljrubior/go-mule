@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var flowsPerApplication *int
+
 var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start",
@@ -16,7 +18,7 @@ var startCmd = &cobra.Command{
 		switch len(args) {
 		case 1:
 			serverId := args[0]
-			err := serverHandler.StartServer(serverId)
+			err := serverHandler.StartServer(serverId, *flowsPerApplication)
 
 			if err != nil {
 				println(err.Error())
@@ -24,10 +26,10 @@ var startCmd = &cobra.Command{
 			}
 			return
 		}
-
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(startCmd)
+	flowsPerApplication = startCmd.Flags().IntP("flows-per-app", "", 0, "Number of flows per application")
 }
