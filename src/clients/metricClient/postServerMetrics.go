@@ -26,19 +26,11 @@ func (t *DefaultMetricClient) PostServerMetrics(body []byte) error {
 		return err
 	}
 
-	println("Status Code:", resp.StatusCode)
-
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != 204 {
 		return t.ThrowError(resp)
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	_, err = ioutil.ReadAll(resp.Body)
 
-	if err != nil {
-		return err
-	}
-
-	println("Response:", string(data))
-
-	return nil
+	return err
 }

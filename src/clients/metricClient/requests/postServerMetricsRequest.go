@@ -40,8 +40,6 @@ func (t *PostServerMetricsRequest) Build() *http.Request {
 
 	req, _ := http.NewRequest(http.MethodPost, uri, bytes.NewBuffer(t.body))
 
-	println(uri)
-
 	req.Header.Add("Content-Type", clients.ContentTypeJSON)
 
 	return req

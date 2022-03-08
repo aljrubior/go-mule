@@ -89,7 +89,6 @@ func (t DefaultServerHandler) StartServer(serverId string, totalFlowsPerApp int)
 func (t DefaultServerHandler) applicationMetricsSender(runtime *runtime.StandaloneRuntime, metricManager metricManager.MetricManager) {
 	for {
 		for _, v := range *runtime.GetApplications() {
-			println("Application Name:", v.Name)
 			metrics := requests.NewApplicationMetricBuilder(v).Build()
 			metricManager.PostApplicationMetrics(v.Name, metrics)
 		}

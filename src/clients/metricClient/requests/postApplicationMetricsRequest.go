@@ -43,8 +43,6 @@ func (t *PostApplicationMetricsRequest) Build() *http.Request {
 
 	req, _ := http.NewRequest(http.MethodPost, uri, bytes.NewBuffer(t.body))
 
-	println(uri)
-
 	req.Header.Add("Content-Type", clients.ContentTypeJSON)
 	req.Header.Add("X-APPLICATION-NAME", t.applicationName)
 

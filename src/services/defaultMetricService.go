@@ -20,8 +20,6 @@ func (t *DefaultMetricService) PostApplicationMetrics(applicationName string, re
 
 	body, err := json.Marshal(request)
 
-	println(string(body))
-
 	if err != nil {
 		return err
 	}
@@ -32,8 +30,6 @@ func (t *DefaultMetricService) PostApplicationMetrics(applicationName string, re
 func (t *DefaultMetricService) PostServerMetrics(request requests.ServerMetricRequest) error {
 
 	body, err := json.Marshal(request)
-
-	println(string(body))
 
 	if err != nil {
 		return err
