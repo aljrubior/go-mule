@@ -1,0 +1,23 @@
+anypoint:
+  protocol:
+  host:
+  port:
+  resources:
+    servers:
+      serversPath:
+
+metrics:
+  protocol:
+  host:
+  port:
+  applicationsPath:
+  serversPath:
+
+security:
+  certificateSigningRequest:
+    commonName:
+    organizationUnit:
+    organization:
+    locality:
+    province:
+    country:
