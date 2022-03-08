@@ -11,4 +11,5 @@ type DefaultConfigManager struct {
 
 	csrConfig          *conf.CSRConfig
 	serverClientConfig *conf.ServerClientConfig
+	metricClientConfig *conf.MetricClientConfig
 }

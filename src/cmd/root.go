@@ -40,6 +40,7 @@ func Execute() {
 
 var ServerManager serverManager.ServerManager
 var ServerRegistrationManager serverRegistrationManager.ServerRegistrationManager
+var ConfigManager defaultConfigManager.DefaultConfigManager
 
 func init() {
 	// Here you will define your flags and configuration settings.
@@ -52,9 +53,9 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	configManger := defaultConfigManager.NewDefaultConfigManager()
-	csrConfig := configManger.GetCSRConfig()
-	serverClientConfig := configManger.GetServerClientConfig()
+	ConfigManager = defaultConfigManager.NewDefaultConfigManager()
+	csrConfig := ConfigManager.GetCSRConfig()
+	serverClientConfig := ConfigManager.GetServerClientConfig()
 
 	ServerManager = wires.InitializeServerManager(*serverClientConfig)
 	ServerRegistrationManager = wires.InitializeServerRegistrationManager(*csrConfig, ServerManager)

@@ -7,7 +7,7 @@
 package wires
 
 import (
-	"github.com/aljrubior/standalone-runtime/clients/serverClient/defaultServerClient"
+	"github.com/aljrubior/standalone-runtime/clients/serverClient"
 	"github.com/aljrubior/standalone-runtime/conf"
 	"github.com/aljrubior/standalone-runtime/managers/serverManager"
 	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
@@ -17,7 +17,7 @@ import (
 // Injectors from serverManagerWire.go:
 
 func InitializeServerManager(config conf.ServerClientConfig) serverManager.ServerManager {
-	defaultServerClientDefaultServerClient := defaultServerClient.NewDefaultServerClient(config)
+	defaultServerClientDefaultServerClient := serverClient.NewDefaultServerClient(config)
 	defaultServerService := services.NewDefaultServerService(defaultServerClientDefaultServerClient)
 	defaultServerManager := serverManager.NewDefaultServerManager(defaultServerService)
 	return defaultServerManager

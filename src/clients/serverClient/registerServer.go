@@ -1,8 +1,8 @@
-package defaultServerClient
+package serverClient
 
 import (
 	"encoding/json"
-	"github.com/aljrubior/standalone-runtime/clients/serverClient/defaultServerClient/requests"
+	"github.com/aljrubior/standalone-runtime/clients/serverClient/requests"
 	"github.com/aljrubior/standalone-runtime/clients/serverClient/responses"
 	"io/ioutil"
 	"net/http"

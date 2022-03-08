@@ -1,26 +1,37 @@
 package handlers
 
 import (
+	"crypto/tls"
 	"fmt"
+	"github.com/aljrubior/standalone-runtime/clients/metricClient"
+	"github.com/aljrubior/standalone-runtime/managers/configManager/defaultConfigManager"
+	"github.com/aljrubior/standalone-runtime/managers/metricManager"
+	"github.com/aljrubior/standalone-runtime/managers/metricManager/requests"
 	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
 	"github.com/aljrubior/standalone-runtime/runtime"
 	"github.com/aljrubior/standalone-runtime/security"
+	"github.com/aljrubior/standalone-runtime/services"
 	"github.com/aljrubior/standalone-runtime/writers"
 	"io/ioutil"
+	"time"
 )
 
 const (
 	TOTAL_FLOWS_PER_APPLICATION_DEFAULT = 10
 )
 
-func NewDefaultServerHandler(serverRegistrationManager serverRegistrationManager.ServerRegistrationManager) DefaultServerHandler {
+func NewDefaultServerHandler(
+	serverRegistrationManager serverRegistrationManager.ServerRegistrationManager,
+	configManager defaultConfigManager.DefaultConfigManager) DefaultServerHandler {
 	return DefaultServerHandler{
 		serverRegistrationManager: serverRegistrationManager,
+		configManager:             configManager,
 	}
 }
 
 type DefaultServerHandler struct {
 	serverRegistrationManager serverRegistrationManager.ServerRegistrationManager
+	configManager             defaultConfigManager.DefaultConfigManager
 }
 
 func (t DefaultServerHandler) CreateServer(token, serverName, muleVersion, agentVersion, environment string) error {
@@ -60,11 +71,48 @@ func (t DefaultServerHandler) StartServer(serverId string, totalFlowsPerApp int)
 		return err
 	}
 
-	runtime := runtime.NewStandaloneRuntime(serverId, contextId, certificatePath, privateKeyPath, caCertificatePath, totalFixedSchPerApp, totalCronSchPerApp)
+	tlsConfig := security.NewTLSConfigBuilder(certificatePath, privateKeyPath, caCertificatePath).Build()
+
+	metricManager := t.buildMetricManager(tlsConfig)
+
+	runtime := runtime.NewStandaloneRuntime(serverId, contextId, tlsConfig, totalFixedSchPerApp, totalCronSchPerApp)
+
+	go t.applicationMetricsSender(&runtime, metricManager)
+
+	go t.serverMetricsSender(metricManager)
 
 	runtime.Start()
 
 	return nil
+}
+
+func (t DefaultServerHandler) applicationMetricsSender(runtime *runtime.StandaloneRuntime, metricManager metricManager.MetricManager) {
+	for {
+		for _, v := range *runtime.GetApplications() {
+			println("Application Name:", v.Name)
+			metrics := requests.NewApplicationMetricBuilder(v).Build()
+			metricManager.PostApplicationMetrics(v.Name, metrics)
+		}
+		time.Sleep(60 * time.Second)
+	}
+}
+
+func (t DefaultServerHandler) serverMetricsSender(metricManager metricManager.MetricManager) {
+	for {
+		now := time.Now()
+		metrics := requests.NewServerMetricRequestBuilder(now.Format(time.RFC3339)).Build()
+
+		metricManager.PostServerMetrics(metrics)
+
+		time.Sleep(60 * time.Second)
+	}
+}
+
+func (t DefaultServerHandler) buildMetricManager(tlsConfig *tls.Config) metricManager.DefaultMetricManager {
+
+	metricClient := metricClient.NewDefaultMetricClient(t.configManager.GetMetricClientConfig(), tlsConfig)
+	metricService := services.NewDefaultMetricService(&metricClient)
+	return metricManager.NewDefaultMetricManager(&metricService)
 }
 
 func (t DefaultServerHandler) getTotalFlows(count int) int {

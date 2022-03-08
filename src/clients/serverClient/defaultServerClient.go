@@ -1,4 +1,4 @@
-package defaultServerClient
+package serverClient
 
 import (
 	"github.com/aljrubior/standalone-runtime/clients"

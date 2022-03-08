@@ -6,6 +6,13 @@ anypoint:
     servers:
       serversPath:
 
+metrics:
+  protocol:
+  host:
+  port:
+  applicationsPath:
+  serversPath:
+
 security:
   certificateSigningRequest:
     commonName:

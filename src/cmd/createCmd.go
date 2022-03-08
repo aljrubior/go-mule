@@ -13,7 +13,7 @@ var createCmd = &cobra.Command{
 	Short: "Create",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		serverHandler := handlers.NewDefaultServerHandler(ServerRegistrationManager)
+		serverHandler := handlers.NewDefaultServerHandler(ServerRegistrationManager, ConfigManager)
 
 		switch len(args) {
 		case 1:

@@ -1,12 +1,13 @@
 package runtime
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/aljrubior/standalone-runtime/application"
+	"github.com/aljrubior/standalone-runtime/managers/metricManager"
 	"github.com/aljrubior/standalone-runtime/runtime/messages"
 	"github.com/aljrubior/standalone-runtime/runtime/messages/notifications"
 	"github.com/aljrubior/standalone-runtime/runtime/strategies"
-	"github.com/aljrubior/standalone-runtime/security"
 	"github.com/aljrubior/standalone-runtime/websockets"
 	"github.com/gorilla/websocket"
 	"io"
@@ -17,22 +18,17 @@ import (
 
 func NewStandaloneRuntime(
 	serverId,
-	contextId,
-	certificatePath,
-	privateKeyPath,
-	caCertificatePath string,
+	contextId string,
+	tlsConfig *tls.Config,
 	totalFixedSchPerApp,
 	totalCronSchPerApp int) StandaloneRuntime {
 
 	applications := make(map[string]*application.Application)
 
 	return StandaloneRuntime{
-		serverId:          serverId,
-		contextId:         contextId,
-		certificatePath:   certificatePath,
-		privateKeyPath:    privateKeyPath,
-		caCertificatePath: caCertificatePath,
-
+		serverId:            serverId,
+		contextId:           contextId,
+		tlsConfig:           tlsConfig,
 		totalFixedSchPerApp: totalFixedSchPerApp,
 		totalCronSchPerApp:  totalCronSchPerApp,
 
@@ -41,16 +37,18 @@ func NewStandaloneRuntime(
 }
 
 type StandaloneRuntime struct {
-	serverId          string
-	contextId         string
-	certificatePath   string
-	privateKeyPath    string
-	caCertificatePath string
-
+	serverId,
+	contextId string
+	tlsConfig *tls.Config
 	totalFixedSchPerApp,
 	totalCronSchPerApp int
+	metricManager metricManager.MetricManager
 
 	applications map[string]*application.Application
+}
+
+func (t StandaloneRuntime) GetApplications() *map[string]*application.Application {
+	return &t.applications
 }
 
 func (runtime StandaloneRuntime) Start() {
@@ -117,9 +115,7 @@ func (runtime StandaloneRuntime) createWebsocketConnection() *websocket.Conn {
 
 	url := runtime.CreateURL()
 
-	tlsConfig := security.NewTLSConfigBuilder(runtime.certificatePath, runtime.privateKeyPath, runtime.caCertificatePath).Build()
-
-	conn, _, err := websockets.NewRuntimeManagerDialer(url, tlsConfig).CreateDialer()
+	conn, _, err := websockets.NewRuntimeManagerDialer(url, runtime.tlsConfig).CreateDialer()
 
 	if err != nil {
 		println("Dial...")
