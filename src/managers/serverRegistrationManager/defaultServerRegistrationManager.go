@@ -1,11 +1,11 @@
 package serverRegistrationManager
 
 import (
-	"github.com/aljrubior/standalone-runtime/conf"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager/requests"
-	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager/entities"
-	"github.com/aljrubior/standalone-runtime/security"
+	"github.com/aljrubior/go-mule/conf"
+	"github.com/aljrubior/go-mule/managers/serverManager"
+	"github.com/aljrubior/go-mule/managers/serverManager/requests"
+	"github.com/aljrubior/go-mule/managers/serverRegistrationManager/entities"
+	"github.com/aljrubior/go-mule/security"
 )
 
 const (

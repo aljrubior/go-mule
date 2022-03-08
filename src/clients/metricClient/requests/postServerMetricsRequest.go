@@ -3,8 +3,8 @@ package requests
 import (
 	"bytes"
 	"fmt"
-	"github.com/aljrubior/standalone-runtime/clients"
-	"github.com/aljrubior/standalone-runtime/conf"
+	"github.com/aljrubior/go-mule/clients"
+	"github.com/aljrubior/go-mule/conf"
 	"net/http"
 )
 

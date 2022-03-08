@@ -2,7 +2,7 @@ package writers
 
 import (
 	"fmt"
-	"github.com/aljrubior/standalone-runtime/security"
+	"github.com/aljrubior/go-mule/security"
 	"os"
 )
 

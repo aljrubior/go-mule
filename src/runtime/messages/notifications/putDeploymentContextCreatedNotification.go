@@ -1,7 +1,7 @@
 package notifications
 
 import (
-	"github.com/aljrubior/standalone-runtime/application"
+	"github.com/aljrubior/go-mule/application"
 	"strings"
 )
 

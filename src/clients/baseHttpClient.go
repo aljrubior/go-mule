@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	errors2 "github.com/aljrubior/standalone-runtime/errors"
+	errors2 "github.com/aljrubior/go-mule/errors"
 	"io/ioutil"
 	"net/http"
 )

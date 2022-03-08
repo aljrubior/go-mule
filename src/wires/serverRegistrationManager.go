@@ -4,9 +4,9 @@
 package wires
 
 import (
-	"github.com/aljrubior/standalone-runtime/conf"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager"
-	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
+	"github.com/aljrubior/go-mule/conf"
+	"github.com/aljrubior/go-mule/managers/serverManager"
+	"github.com/aljrubior/go-mule/managers/serverRegistrationManager"
 	"github.com/google/wire"
 )
 

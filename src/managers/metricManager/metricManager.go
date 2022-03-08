@@ -1,6 +1,6 @@
 package metricManager
 
-import "github.com/aljrubior/standalone-runtime/managers/metricManager/requests"
+import "github.com/aljrubior/go-mule/managers/metricManager/requests"
 
 type MetricManager interface {
 	PostApplicationMetrics(applicationName string, metrics requests.ApplicationMetricRequest) error

@@ -1,8 +1,8 @@
 package metricManager
 
 import (
-	"github.com/aljrubior/standalone-runtime/managers/metricManager/requests"
-	"github.com/aljrubior/standalone-runtime/services"
+	"github.com/aljrubior/go-mule/managers/metricManager/requests"
+	"github.com/aljrubior/go-mule/services"
 )
 
 func NewDefaultMetricManager(metricService services.MetricService) DefaultMetricManager {

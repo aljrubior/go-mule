@@ -2,8 +2,8 @@ package strategies
 
 import (
 	"fmt"
-	"github.com/aljrubior/standalone-runtime/runtime/messages"
-	"github.com/aljrubior/standalone-runtime/runtime/messages/responses"
+	"github.com/aljrubior/go-mule/runtime/messages"
+	"github.com/aljrubior/go-mule/runtime/messages/responses"
 	"github.com/gorilla/websocket"
 )
 

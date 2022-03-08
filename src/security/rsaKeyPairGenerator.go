@@ -1,6 +1,6 @@
 package security
 
-import "github.com/aljrubior/standalone-runtime/conf"
+import "github.com/aljrubior/go-mule/conf"
 
 type RSAKeyPairGenerator struct {
 	config conf.CSRConfig

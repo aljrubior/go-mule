@@ -2,8 +2,8 @@ package serverClient
 
 import (
 	"encoding/json"
-	"github.com/aljrubior/standalone-runtime/clients/serverClient/requests"
-	"github.com/aljrubior/standalone-runtime/clients/serverClient/responses"
+	"github.com/aljrubior/go-mule/clients/serverClient/requests"
+	"github.com/aljrubior/go-mule/clients/serverClient/responses"
 	"io/ioutil"
 	"net/http"
 	"time"

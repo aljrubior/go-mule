@@ -1,6 +1,6 @@
 package security
 
-import "github.com/aljrubior/standalone-runtime/conf"
+import "github.com/aljrubior/go-mule/conf"
 
 func NewRSAKeyPairGenerator(config conf.CSRConfig, keySize int) RSAKeyPairGenerator {
 

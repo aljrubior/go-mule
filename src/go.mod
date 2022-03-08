@@ -1,4 +1,4 @@
-module github.com/aljrubior/standalone-runtime
+module github.com/aljrubior/go-mule
 
 go 1.17
 

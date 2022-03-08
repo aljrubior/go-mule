@@ -1,6 +1,6 @@
 package notifications
 
-import "github.com/aljrubior/standalone-runtime/application"
+import "github.com/aljrubior/go-mule/application"
 
 const (
 	APPLICATION_NAME_PATTERN = "{{applicationName}}"

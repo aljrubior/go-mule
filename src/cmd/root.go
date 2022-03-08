@@ -5,10 +5,10 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/aljrubior/standalone-runtime/managers/configManager/defaultConfigManager"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager"
-	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
-	"github.com/aljrubior/standalone-runtime/wires"
+	"github.com/aljrubior/go-mule/managers/configManager/defaultConfigManager"
+	"github.com/aljrubior/go-mule/managers/serverManager"
+	"github.com/aljrubior/go-mule/managers/serverRegistrationManager"
+	"github.com/aljrubior/go-mule/wires"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -16,7 +16,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "standalone-runtime",
+	Use:   "go-mule",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
@@ -47,7 +47,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.standalone-runtime.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-mule.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/aljrubior/standalone-runtime/clients/serverClient/responses"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager/requests"
+	"github.com/aljrubior/go-mule/clients/serverClient/responses"
+	"github.com/aljrubior/go-mule/managers/serverManager/requests"
 )
 
 type ServerService interface {

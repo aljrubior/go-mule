@@ -1,4 +1,4 @@
-# standalone-runtime Cheat Sheet (nodesc)
+# go-mule Cheat Sheet (nodesc)
 
 ### Registration command
 

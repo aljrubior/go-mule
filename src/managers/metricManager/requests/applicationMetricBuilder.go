@@ -1,7 +1,7 @@
 package requests
 
 import (
-	"github.com/aljrubior/standalone-runtime/application"
+	"github.com/aljrubior/go-mule/application"
 	"math/rand"
 	"time"
 )

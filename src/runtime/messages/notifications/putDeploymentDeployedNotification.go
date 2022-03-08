@@ -2,7 +2,7 @@ package notifications
 
 import (
 	"fmt"
-	"github.com/aljrubior/standalone-runtime/application"
+	"github.com/aljrubior/go-mule/application"
 	"strings"
 )
 

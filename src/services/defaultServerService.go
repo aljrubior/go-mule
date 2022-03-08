@@ -2,9 +2,9 @@ package services
 
 import (
 	"encoding/json"
-	"github.com/aljrubior/standalone-runtime/clients/serverClient"
-	"github.com/aljrubior/standalone-runtime/clients/serverClient/responses"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager/requests"
+	"github.com/aljrubior/go-mule/clients/serverClient"
+	"github.com/aljrubior/go-mule/clients/serverClient/responses"
+	"github.com/aljrubior/go-mule/managers/serverManager/requests"
 )
 
 func NewDefaultServerService(serverClient serverClient.ServerClient) DefaultServerService {

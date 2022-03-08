@@ -1,6 +1,6 @@
 package defaultConfigManager
 
-import "github.com/aljrubior/standalone-runtime/conf"
+import "github.com/aljrubior/go-mule/conf"
 
 func (manager *DefaultConfigManager) GetCSRConfig() *conf.CSRConfig {
 

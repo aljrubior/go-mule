@@ -7,11 +7,11 @@
 package wires
 
 import (
-	"github.com/aljrubior/standalone-runtime/clients/serverClient"
-	"github.com/aljrubior/standalone-runtime/conf"
-	"github.com/aljrubior/standalone-runtime/managers/serverManager"
-	"github.com/aljrubior/standalone-runtime/managers/serverRegistrationManager"
-	"github.com/aljrubior/standalone-runtime/services"
+	"github.com/aljrubior/go-mule/clients/serverClient"
+	"github.com/aljrubior/go-mule/conf"
+	"github.com/aljrubior/go-mule/managers/serverManager"
+	"github.com/aljrubior/go-mule/managers/serverRegistrationManager"
+	"github.com/aljrubior/go-mule/services"
 )
 
 // Injectors from serverManagerWire.go:

@@ -1,7 +1,7 @@
 package metricClient
 
 import (
-	"github.com/aljrubior/standalone-runtime/clients/metricClient/requests"
+	"github.com/aljrubior/go-mule/clients/metricClient/requests"
 	"io/ioutil"
 	"net/http"
 	"time"

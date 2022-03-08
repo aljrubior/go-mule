@@ -1,6 +1,6 @@
-# Register a standalone-runtime
+# Register a go-mule
 
-### 1. Register a standalone-runtime
+### 1. Register a go-mule
 
 ```
 go-mule create -H <hybrid-token> <server-name>

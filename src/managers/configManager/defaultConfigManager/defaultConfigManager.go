@@ -1,7 +1,7 @@
 package defaultConfigManager
 
 import (
-	"github.com/aljrubior/standalone-runtime/conf"
+	"github.com/aljrubior/go-mule/conf"
 )
 
 type DefaultConfigManager struct {

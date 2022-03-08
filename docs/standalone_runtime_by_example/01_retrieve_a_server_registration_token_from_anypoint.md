@@ -1,4 +1,4 @@
-# Register the standalone-runtime to Anypoint Platform
+# Register the go-mule to Anypoint Platform
 
 ### 1. Create an account in Anypoint Platform
 

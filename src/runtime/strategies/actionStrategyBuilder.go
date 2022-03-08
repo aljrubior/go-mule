@@ -1,8 +1,8 @@
 package strategies
 
 import (
-	"github.com/aljrubior/standalone-runtime/application"
-	"github.com/aljrubior/standalone-runtime/runtime/messages"
+	"github.com/aljrubior/go-mule/application"
+	"github.com/aljrubior/go-mule/runtime/messages"
 	"github.com/gorilla/websocket"
 )
 

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/aljrubior/standalone-runtime/handlers"
+	"github.com/aljrubior/go-mule/handlers"
 	"github.com/spf13/cobra"
 	"os"
 )

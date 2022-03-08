@@ -2,8 +2,8 @@ package metricClient
 
 import (
 	"crypto/tls"
-	"github.com/aljrubior/standalone-runtime/clients"
-	"github.com/aljrubior/standalone-runtime/conf"
+	"github.com/aljrubior/go-mule/clients"
+	"github.com/aljrubior/go-mule/conf"
 )
 
 func NewDefaultMetricClient(config *conf.MetricClientConfig, tlsConfig *tls.Config) DefaultMetricClient {

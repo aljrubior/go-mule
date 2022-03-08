@@ -16,24 +16,24 @@ type DefaultMetricService struct {
 	metricClient metricClient.MetricClient
 }
 
-func (t DefaultMetricService) PostApplicationMetrics(applicationName string, request requests.ApplicationMetricRequest) error {
+func (t *DefaultMetricService) PostApplicationMetrics(applicationName string, request requests.ApplicationMetricRequest) error {
 
-	data, err := json.Marshal(request)
+	body, err := json.Marshal(request)
 
 	if err != nil {
 		return err
 	}
 
-	return t.metricClient.PostApplicationMetrics(applicationName, data)
+	return t.metricClient.PostApplicationMetrics(applicationName, body)
 }
 
-func (t DefaultMetricService) PostServerMetrics(request requests.ServerMetricRequest) error {
+func (t *DefaultMetricService) PostServerMetrics(request requests.ServerMetricRequest) error {
 
-	data, err := json.Marshal(request)
+	body, err := json.Marshal(request)
 
 	if err != nil {
 		return err
 	}
 
-	return t.metricClient.PostServerMetrics(data)
+	return t.metricClient.PostServerMetrics(body)
 }

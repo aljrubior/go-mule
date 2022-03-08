@@ -1,4 +1,4 @@
-# Start a standalone-runtime
+# Start a go-mule
 
 ### 1. Start the runtime
 
