@@ -29,6 +29,8 @@ func (serverClient DefaultServerClient) RegisterServer(token, agentVersion strin
 
 	data, err := ioutil.ReadAll(resp.Body)
 
+	println(string(data))
+
 	if err != nil {
 		return nil, err
 	}
